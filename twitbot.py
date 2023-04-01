@@ -15,18 +15,8 @@ def random_fact():
     url = "https://newsapi.org/v2/everything?q=technology&language=en&from=" + \
         str(date.today())+"&apiKey="+news_apikey
 
-    # querystring = {"category": "Technology",
-    #                "safeSearch": "Off", "textFormat": "Raw"}
-
-    headers = {
-        "X-BingApis-SDK": "true",
-        "X-RapidAPI-Key": "9589337a3fmsh25dc89ca639303fp1a2db7jsna257f4506309",
-        "X-RapidAPI-Host": "bing-news-search1.p.rapidapi.com"
-    }
-
-    response = requests.request(
-        "GET", url, headers=headers)
-    print(response.json()['articles'])
+    response = requests.request("GET", url)
+    print(response.json())
     return response.json()['articles']
 
 
