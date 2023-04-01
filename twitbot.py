@@ -25,7 +25,7 @@ def random_fact():
 
     response = requests.request(
         "GET", url, headers=headers)
-
+    print(response.json()['articles'])
     return response.json()['articles']
 
 
