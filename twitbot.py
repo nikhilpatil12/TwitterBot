@@ -11,6 +11,7 @@ import hashlib
 
 
 def random_fact():
+    print("in randomfact")
     url = "https://newsapi.org/v2/everything?q=technology&language=en&from=" + \
         str(date.today())+"&apiKey="+news_apikey
 
