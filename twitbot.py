@@ -1,6 +1,10 @@
 import requests
 from requests_oauthlib import OAuth1
-import constants
+from constants import consumer_key
+from constants import consumer_secret 
+from constants import access_token 
+from constants import access_token_secret
+from constants import news_apikey 
 from datetime import date
 import sqlite3
 import hashlib
