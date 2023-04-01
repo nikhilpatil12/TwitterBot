@@ -2,7 +2,7 @@ FROM ubuntu:latest
 ENV TZ=America/Los_Angeles
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt install -y tzdata
-RUN apt install -y pip cron nan  o systemctl
+RUN apt install -y pip cron nano systemctl
 COPY cronjob /etc/cron.d/cronjob
 RUN chmod 0644 /etc/cron.d/cronjob
 RUN crontab /etc/cron.d/cronjob
