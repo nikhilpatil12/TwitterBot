@@ -42,6 +42,7 @@ def connect_to_oauth(consumer_key, consumer_secret, acccess_token, access_token_
 
 
 def main():
+    newshash = ''
     try:
         # Connect to DB and create a cursor
         sqliteConnection = sqlite3.connect('bot.db')
