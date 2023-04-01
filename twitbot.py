@@ -1,23 +1,22 @@
 import requests
 from requests_oauthlib import OAuth1
 from constants import consumer_key
-from constants import consumer_secret 
-from constants import access_token 
+from constants import consumer_secret
+from constants import access_token
 from constants import access_token_secret
-from constants import news_apikey 
-from datetime import date
+from constants import news_apikey
+import datetime
 import sqlite3
 import hashlib
 
 
 def random_fact():
-    print("in randomfact")
-    print(news_apikey)
+    dt = datetime.date.today() - datetime.timedelta(days=1)
     url = "https://newsapi.org/v2/everything?q=technology&language=en&from=" + \
-        str(date.today())+"&apiKey="+news_apikey
-
+        str(dt)+"&apiKey="+news_apikey
+    print(url)
     response = requests.request("GET", url)
-    print(response.json())
+    # print(response.json())
     return response.json()['articles']
 
 
@@ -81,7 +80,7 @@ def main():
                 if result == []:
                     print('SQLite Result is Empty, Proceed to insert')
                     newstopost = fct['title'] + "\n\n" + \
-                        fct['description'] + fct['url']
+                        fct['url']
                 else:
                     print('SQLite Result is: '+str(result))
 
@@ -92,11 +91,13 @@ def main():
         url, auth = connect_to_oauth(
             consumer_key, consumer_secret, access_token, access_token_secret
         )
+        print(url)
+        print(str(auth))
         request = requests.post(
             auth=auth, url=url, json=payload, headers={
                 "Content-Type": "application/json"}
         )
-        print(request)
+        print(request.json())
         insertquery = """INSERT INTO POSTED (HASH) VALUES ('""" + \
             newshash+"""');"""
         cursor.execute(insertquery)
