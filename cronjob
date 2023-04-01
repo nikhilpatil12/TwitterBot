@@ -1,0 +1,1 @@
+*/30 * * * * root python3 /twitbot/twitbot.py
