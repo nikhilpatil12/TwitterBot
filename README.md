@@ -19,7 +19,7 @@ news_apikey = 'YOUR_NEWSAPI_ORG_API_KEY'
 `docker build -t twitbot .`
 4. Run the Docker container with the following command:
 `docker run -d --name twitbot twitbot`
-This will start the cron job inside the container, which will run the `twitbot.py script` twice every hour.
+This will start the cron job inside the container, which will run the `twitbot.py` script twice every hour.
 ---
 ### Code Explanation
 The `twitbot.py` script performs the following steps:
@@ -44,7 +44,8 @@ The `twitbot.py` script performs the following steps:
 5. Hashlib - A Python library used for hashing the title of the news article.
 6. Docker - A platform used to create a container for running the script.
 7. Cron - A job scheduler used to run the script at a specified time every day.
-###### References
+---
+##### References
 - Python documentation: https://docs.python.org/3/
 - Requests documentation: https://docs.python-requests.org/en/latest/
 - Requests-OAuthlib documentation: https://requests-oauthlib.readthedocs.io/en/latest/
