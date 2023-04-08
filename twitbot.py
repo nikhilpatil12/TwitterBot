@@ -8,6 +8,7 @@ from constants import news_apikey
 import datetime
 import sqlite3
 import hashlib
+import logging
 
 
 def random_fact():
@@ -35,6 +36,10 @@ def connect_to_oauth(consumer_key, consumer_secret, acccess_token, access_token_
 def main():
     newshash = ''
     try:
+        # Configure logging
+        logging.basicConfig(
+            filename='/var/log/twitbot.log', level=logging.INFO)
+
         # Connect to DB and create a cursor
         sqliteConnection = sqlite3.connect('bot.db')
         cursor = sqliteConnection.cursor()
@@ -79,8 +84,11 @@ def main():
                 result = cursor.fetchall()
                 if result == []:
                     print('SQLite Result is Empty, Proceed to insert')
-                    newstopost = fct['title'] + "\n\n" + \
-                        fct['url']
+                    newstopost = fct['description'] + "\n\n" + \
+                        fct['url'] + """ #tech #TechNews"""
+                    if len(newstopost) > 280:
+                        newstopost = fct['title'] + "\n\n" + \
+                            fct['url'] + """ #tech #TechNews"""
                 else:
                     print('SQLite Result is: '+str(result))
 
@@ -98,13 +106,18 @@ def main():
                 "Content-Type": "application/json"}
         )
         print(request.json())
-        insertquery = """INSERT INTO POSTED (HASH) VALUES ('""" + \
-            newshash+"""');"""
-        cursor.execute(insertquery)
 
-        sqliteConnection.commit()
-        # Close the cursor
-        cursor.close()
+        # Log the response
+        logging.info(f'Response status code: {request.status_code}')
+        logging.info(f'Response content: {request.content}')
+        if request.status_code >= 200 and request.status_code < 300:
+            insertquery = """INSERT INTO POSTED (HASH) VALUES ('""" + \
+                newshash + """');"""
+            cursor.execute(insertquery)
+
+            sqliteConnection.commit()
+            # Close the cursor
+            cursor.close()
 
     # Handle errors
     except sqlite3.Error as error:
