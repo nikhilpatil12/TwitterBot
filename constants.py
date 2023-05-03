@@ -1,0 +1,5 @@
+consumer_key = 'YOUR_TWITTER_API_CONSUMER_KEY'
+consumer_secret = 'YOUR_TWITTER_API_CONSUMER_SECRET'
+access_token = 'YOUR_TWITTER_API_ACCESS_TOKEN'
+access_token_secret = 'YOUR_TWITTER_API_ACCESS_TOKEN_SECRET'
+news_apikey = 'YOUR_NEWS_API_KEY'
