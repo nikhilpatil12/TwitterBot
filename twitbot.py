@@ -10,7 +10,6 @@ import sqlite3
 import hashlib
 import logging
 
-
 def random_fact():
     dt = datetime.date.today() - datetime.timedelta(days=1)
     url = "https://newsapi.org/v2/everything?q=technology&language=en&from=" + \
@@ -37,8 +36,7 @@ def main():
     newshash = ''
     try:
         # Configure logging
-        logging.basicConfig(
-            filename='/var/log/twitbot.log', level=logging.INFO)
+        logging.basicConfig(filename='/var/log/twitbot.log', level=logging.INFO)
 
         # Connect to DB and create a cursor
         sqliteConnection = sqlite3.connect('bot.db')
@@ -77,18 +75,19 @@ def main():
                 h.update(fct['title'].encode())
                 newshash = h.hexdigest()  # the Hash
                 # Write a query and execute it with cursor
-                findquery = """SELECT * FROM POSTED WHERE HASH='"""+newshash+"""';"""
+                findquery = "SELECT * FROM POSTED WHERE HASH='"+newshash+"';"
+                print(findquery)
                 cursor.execute(findquery)
 
                 # Fetch and output result
                 result = cursor.fetchall()
+                print(result)
                 if result == []:
                     print('SQLite Result is Empty, Proceed to insert')
                     newstopost = fct['description'] + "\n\n" + \
                         fct['url'] + """ #tech #TechNews"""
                     if len(newstopost) > 280:
-                        newstopost = fct['title'] + "\n\n" + \
-                            fct['url'] + """ #tech #TechNews"""
+                        newstopost = fct['title'] + "\n\n" + fct['url'] + """ #tech #TechNews"""
                 else:
                     print('SQLite Result is: '+str(result))
 
@@ -110,9 +109,8 @@ def main():
         # Log the response
         logging.info(f'Response status code: {request.status_code}')
         logging.info(f'Response content: {request.content}')
-        if request.status_code >= 200 and request.status_code < 300:
-            insertquery = """INSERT INTO POSTED (HASH) VALUES ('""" + \
-                newshash + """');"""
+        if (request.status_code >=200 and request.status_code <300) or request.status_code==403:
+            insertquery = "INSERT INTO POSTED (HASH) VALUES ('"+ newshash +"');"
             cursor.execute(insertquery)
 
             sqliteConnection.commit()
