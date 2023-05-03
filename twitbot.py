@@ -42,7 +42,7 @@ def main():
         sqliteConnection = sqlite3.connect('bot.db')
         cursor = sqliteConnection.cursor()
         print('DB Init')
-
+        
         # check if table exists
         print('Check if POSTED table exists in the database:')
         listOfTables = cursor.execute(
@@ -112,13 +112,14 @@ def main():
         if (request.status_code >=200 and request.status_code <300) or request.status_code==403:
             insertquery = "INSERT INTO POSTED (HASH) VALUES ('"+ newshash +"');"
             cursor.execute(insertquery)
-
             sqliteConnection.commit()
+            logging.info(f'Added hash {newshash} to DB')
             # Close the cursor
             cursor.close()
 
     # Handle errors
     except sqlite3.Error as error:
+        logging.info('SQLite Error')
         print('Error occurred - ', error)
 
     # Close DB Connection irrespective of success
