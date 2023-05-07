@@ -10,6 +10,7 @@ import sqlite3
 import hashlib
 import logging
 
+
 def random_fact():
     dt = datetime.date.today() - datetime.timedelta(days=1)
     url = "https://newsapi.org/v2/everything?q=technology&language=en&from=" + \
@@ -36,28 +37,27 @@ def main():
     newshash = ''
     try:
         # Configure logging
-        logging.basicConfig(filename='/var/log/twitbot.log', level=logging.INFO)
+        logging.basicConfig(
+            filename='/var/log/twitbot.log', level=logging.INFO)
 
         # Connect to DB and create a cursor
         sqliteConnection = sqlite3.connect('bot.db')
         cursor = sqliteConnection.cursor()
-        print('DB Init')
-        
+        logging.info('DB Init')
+
         # check if table exists
-        print('Check if POSTED table exists in the database:')
+        logging.info('Check if POSTED table exists in the database:')
         listOfTables = cursor.execute(
-            """SELECT name FROM sqlite_master WHERE type='table'
-        AND name='POSTED'; """).fetchall()
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='POSTED'; ").fetchall()
 
         if listOfTables == []:
             # create tables
-            cursor.execute(
-                """CREATE TABLE POSTED(HASH VARCHAR(255));""")
-            print('POSTED table created')
+            cursor.execute("CREATE TABLE POSTED(HASH VARCHAR(255));")
+            logging.info('POSTED table created')
             # commit changes
             sqliteConnection.commit()
         else:
-            print('Table found!')
+            logging.info('Table found!')
 
         newstopost = ''
 
@@ -66,7 +66,7 @@ def main():
             if newstopost == '':
                 # print(fct['source']['name'])
                 # print(fct['author'])
-                print(fct['title'])
+                logging.info(fct['title'])
                 # print(fct['description'])
                 # print(fct['url'])
                 # print(fct['urlToImage'])
@@ -76,25 +76,26 @@ def main():
                 newshash = h.hexdigest()  # the Hash
                 # Write a query and execute it with cursor
                 findquery = "SELECT * FROM POSTED WHERE HASH='"+newshash+"';"
-                print(findquery)
+                logging.info(findquery)
                 cursor.execute(findquery)
 
                 # Fetch and output result
                 result = cursor.fetchall()
-                print(result)
+                logging.info(result)
                 if result == []:
                     print('SQLite Result is Empty, Proceed to insert')
                     newstopost = fct['description'] + "\n\n" + \
                         fct['url'] + """ #tech #TechNews"""
                     if len(newstopost) > 280:
-                        newstopost = fct['title'] + "\n\n" + fct['url'] + """ #tech #TechNews"""
+                        newstopost = fct['title'] + "\n\n" + \
+                            fct['url'] + """ #tech #TechNews"""
                 else:
                     print('SQLite Result is: '+str(result))
 
         # commit changes
         sqliteConnection.commit()
         payload = format_fact(newstopost)
-        print(payload)
+        logging.info(payload)
         url, auth = connect_to_oauth(
             consumer_key, consumer_secret, access_token, access_token_secret
         )
@@ -104,13 +105,14 @@ def main():
             auth=auth, url=url, json=payload, headers={
                 "Content-Type": "application/json"}
         )
-        print(request.json())
+        logging.info(request.json())
 
         # Log the response
         logging.info(f'Response status code: {request.status_code}')
         logging.info(f'Response content: {request.content}')
-        if (request.status_code >=200 and request.status_code <300) or request.status_code==403:
-            insertquery = "INSERT INTO POSTED (HASH) VALUES ('"+ newshash +"');"
+        if (request.status_code >= 200 and request.status_code < 300) or request.status_code == 403:
+            insertquery = "INSERT INTO POSTED (HASH) VALUES ('" + \
+                newshash + "');"
             cursor.execute(insertquery)
             sqliteConnection.commit()
             logging.info(f'Added hash {newshash} to DB')
@@ -120,14 +122,14 @@ def main():
     # Handle errors
     except sqlite3.Error as error:
         logging.info('SQLite Error')
-        print('Error occurred - ', error)
+        logging.info(f'Error occurred -  {error}')
 
     # Close DB Connection irrespective of success
     # or failure
     finally:
         if sqliteConnection:
             sqliteConnection.close()
-            print('SQLite Connection closed')
+            logging.info('SQLite Connection closed')
 
 
 if __name__ == "__main__":
