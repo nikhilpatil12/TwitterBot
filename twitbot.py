@@ -83,14 +83,14 @@ def main():
                 result = cursor.fetchall()
                 logging.info(result)
                 if result == []:
-                    print('SQLite Result is Empty, Proceed to insert')
+                    logging.info('SQLite Result is Empty, Proceed to insert')
                     newstopost = fct['description'] + "\n\n" + \
                         fct['url'] + """ #tech #TechNews"""
                     if len(newstopost) > 280:
                         newstopost = fct['title'] + "\n\n" + \
                             fct['url'] + """ #tech #TechNews"""
                 else:
-                    print('SQLite Result is: '+str(result))
+                    logging.info('SQLite Result is: '+str(result))
 
         # commit changes
         sqliteConnection.commit()
@@ -99,8 +99,8 @@ def main():
         url, auth = connect_to_oauth(
             consumer_key, consumer_secret, access_token, access_token_secret
         )
-        print(url)
-        print(str(auth))
+        logging.info(url)
+        logging.info(str(auth))
         request = requests.post(
             auth=auth, url=url, json=payload, headers={
                 "Content-Type": "application/json"}
