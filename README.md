@@ -35,6 +35,12 @@ The `twitbot.py` script performs the following steps:
 10. Finally, the script calls the main() function if the script is run as the main program.
 11. The Dockerfile sets up a Ubuntu environment with the necessary dependencies and sets up a cron job to run the `twitbot.py` script *twice* every hour. The cronjob file specifies the cron job schedule.
 ---
+## Contributing
+Feel free to contribute to the project by submitting issues or pull requests. Follow the standard GitHub workflow for contributions.
+---
+## License
+This project is licensed under the MIT License. Feel free to use, modify, and distribute the code as per the license terms.
+---
 ### Tools Used
 ##### The following tools were used in this project:
 1. Python - A programming language used to write the script.
