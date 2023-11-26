@@ -7,7 +7,7 @@ COPY cronjob /etc/cron.d/cronjob
 RUN chmod 0644 /etc/cron.d/cronjob
 RUN crontab /etc/cron.d/cronjob
 
-RUN pip install requests requests_oauthlib
+RUN pip install requests requests_oauthlib --break-system-packages
 COPY twitbot.py /twitbot/twitbot.py
 COPY constants.py /twitbot/constants.py
 
